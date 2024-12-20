@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Form</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8f6f3, #dff9fb);
+            font-family: 'Verdana', sans-serif;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            max-width: 700px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #1abc9c;
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #34495e;
+            font-size: 1rem;
+        }
+
+        .form-control {
+            border-radius: 8px;
+            border: 1px solid #dcdde1;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #1abc9c;
+            box-shadow: 0 0 8px rgba(26, 188, 156, 0.4);
+            outline: none;
+        }
+
+        textarea.form-control {
+            resize: none;
+        }
+
+        button.btn-success {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        button.btn-success:hover {
+            background: linear-gradient(135deg, #16a085, #1abc9c);
+            transform: scale(1.05);
+        }
+
+        a.btn-secondary {
+            background-color: #95a5a6;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        a.btn-secondary:hover {
+            background-color: #7f8c8d;
+            transform: scale(1.05);
+        }
+
+        .form-control::placeholder {
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Add New Event</h1>
+
+    <div class="alert-danger" th:if="${status == 'no'}" th:text="${errorMessage}">
+        Event with this name or location already exists.
+    </div>
+
+    <form method="POST" action="/events/add">
+        <input type="hidden" name="eventId" th:value="${event != null ? event.id : null}" />
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Event Name</label>
+            <input type="text" class="form-control" id="name" name="name" th:value="${event != null ? event.name : ''}" required placeholder="Enter event name">
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Event Description</label>
+            <textarea class="form-control" id="description" name="description" placeholder="Enter event description" th:text="${event != null ? event.description : ''}" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="popularityScore" class="form-label">Popularity Score</label>
+            <input type="number" class="form-control" id="popularityScore" name="popularityScore" min="0" step="1"
+                   th:value="${event != null ? event.popularityScore : ''}" placeholder="Enter event popularity score" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="locationId" class="form-label">Location</label>
+            <select class="form-control" id="locationId" name="locationId" required>
+                <option th:each="location : ${locations}" th:value="${location.id}" th:text="${location.name}"
+                        th:selected="${event != null && event.location != null && event.location.id == location.id}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-success">Save Event</button>
+        <a href="/events" class="btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

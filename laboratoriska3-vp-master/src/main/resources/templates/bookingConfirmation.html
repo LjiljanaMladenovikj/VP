@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Booking Confirmation</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8f6f3, #dff9fb);
+            font-family: 'Verdana', sans-serif;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            max-width: 800px;
+            margin: 50px auto;
+        }
+
+        h1, h2 {
+            color: #1abc9c;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        strong {
+            color: #34495e;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #dff9fb;
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            text-align: left;
+            padding: 12px 15px;
+            border: 1px solid #dcdde1;
+        }
+
+        table th {
+            background: #1abc9c;
+            color: white;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        table td {
+            font-size: 0.95rem;
+            color: #34495e;
+        }
+
+        table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Booking Confirmation</h1>
+
+    <p><strong>Event:</strong> <span th:text="${booking.eventName}"></span></p>
+    <p><strong>Attendee Name:</strong> <span th:text="${booking.attendeeName}"></span></p>
+    <p><strong>Number of Tickets:</strong> <span th:text="${booking.numberOfTickets}"></span></p>
+
+    <h2>Other Bookings by This Attendee</h2>
+    <ul>
+        <li th:each="b : ${bookings}" th:text="${b.eventName}"></li>
+    </ul>
+
+    <h2>Your Booking Status</h2>
+    <table>
+        <tr>
+            <th colspan="2">Details</th>
+        </tr>
+        <tr>
+            <td><strong>Attendee Name</strong></td>
+            <td><span th:text="${booking.attendeeName}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Client IP Address</strong></td>
+            <td><span th:text="${ipAddress}"></span></td>
+        </tr>
+        <tr>
+            <td><strong>Booking for Event</strong></td>
+            <td th:text="${booking.eventName}">Event Name</td>
+        </tr>
+        <tr>
+            <td><strong>Number of Tickets</strong></td>
+            <td th:text="${booking.numberOfTickets}">Number of Tickets</td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

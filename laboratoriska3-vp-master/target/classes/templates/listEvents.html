@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <title>Event List</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #e8f6f3, #dff9fb);
+            font-family: 'Verdana', sans-serif;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin: 50px auto;
+        }
+
+        h1 {
+            color: #1abc9c;
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        select, input[type="text"], input[type="number"] {
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #1abc9c, #16a085);
+            border: none;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #16a085, #1abc9c);
+            transform: scale(1.05);
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            background: #ffffff;
+            margin: 10px 0;
+            padding: 20px;
+            border: 1px solid #dcdde1;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        ul li div {
+            margin-top: 10px;
+        }
+
+        ul li div a {
+            margin-right: 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1abc9c;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        ul li div a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+
+        a {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1abc9c;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #16a085;
+            text-decoration: underline;
+        }
+
+        .filter-form {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .filter-form label {
+            margin-right: 10px;
+        }
+
+        .filter-form button {
+            margin-left: 10px;
+        }
+
+        form {
+            margin-top: 15px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Event List</h1>
+
+    <!-- Location Filter Form -->
+    <div class="filter-form">
+        <form th:action="@{/events}" method="get">
+            <label for="location">Filter by Location:</label>
+            <select id="location" name="locationId">
+                <option value="">All Locations</option>
+                <option th:each="loc : ${locations}" th:value="${loc.id}" th:text="${loc.name}"></option>
+            </select>
+            <button type="submit">Filter</button>
+        </form>
+    </div>
+
+    <ul>
+        <li th:each="event : ${events}">
+            <h2 th:text="${event.name}">Event Name</h2>
+
+            <div>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/events/edit-form/{eventId}(eventId=${event.id})}">Edit</a>
+                </th:block>
+                <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a th:href="@{/events/delete/{id}(id=${event.id})}">Delete</a>
+                </th:block>
+            </div>
+
+            <!-- Booking Form -->
+            <form th:action="@{/eventBooking}" method="post">
+                <input type="hidden" name="name" th:value="${event.name}" />
+                <label for="attendeeName">Attendee Name:</label>
+                <input type="text" id="attendeeName" name="attendeeName" required />
+                <label for="numTickets">Number of Tickets:</label>
+                <input type="number" id="numTickets" name="numTickets" min="1" value="1" required />
+                <button type="submit">Book</button>
+            </form>
+        </li>
+    </ul>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a th:href="@{/events/add-form}">Add Event</a>
+    </div>
+</div>
+
+</body>
+</html>
